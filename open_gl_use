@@ -1,0 +1,88 @@
+import
+-	#include <GL/glut.h>
+
+
+functions
+
+	intitialization
+
+-	glutInit( int * argc, char * * argv ) 				must be called only once in GLUT program
+-	glutInitWindowSize( int w, int h )				Change window size
+-	glutInitWindowPosition( int x, int y )				Change window pos
+-	glutInitDisplayMode( unsigned int mode )			initial display mode used when creating top-level windows etc..
+
+
+	event processing
+
+-	glutMainLoop( void )						enter GLUT event processing loop, only call ONCE and when called will not return 
+
+
+	window manegement
+
+-	glutCreatWindow( char * name )
+-	glutCreateSubWindow( int win, int x, int y, int w, int h )	creates new window wihin the current window
+-	glutDisplayFunc( void (* func(void)) )				callback function to draw when asked to in main loop, MUST USE
+-	glutSetWindow( int win )
+-  int 	glutGetWindow( void )						returns current widow identifier ---- if no window return 0
+-	glutDestroyWindow( int win )
+-	glutPostRedisplay( void )					marks current window as needing to be Re-displayed
+-	glutSwapBuffers( void )						
+-	glutPositionWindow( int x, int y )				request window pos change
+-	glutReshapeWindow( itn w, int h )				request window size change
+-	glutFullScreen( void )						request to make current window FullScreen
+-	glutPopWindow( void )
+-	glutPushWindow( void )
+-	glutShowWindow( void )
+-	glutHideWindow( void )
+-	glutIconifyWindow( void )
+-	glutSetWindowTitle( char * name )
+-	glutSetIconTitle( char * name )
+-	glutSetCursor( int cursor )
+
+
+	drawing functions
+
+-	glutTimerFunc( int t, void (*func( int )), int a )			run function func after time t ---- set a = 0 :)
+-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ... etc )		clear arguments
+-	glBegin( GLUT_POLYGON )							start drawing, arguments available in docs
+-	glVertex3f( float x, float y, float z )					draw point on x y z
+-	dlEnd( void )								end drawing
+-	glClearColor( float r, float g, float b )				set the clear color of the window ( background colod )
+-	glViewPort( int x, int y, GLsizei width, GLsizei heigh )		sets a viewport to draw on
+-	glColor3f( float r, float g, float b )					sets the draw color
+
+
+	callback settings
+
+-	glutTimerFunc( int t, void (*func( int )), int a )				run function func after time t ---- set a = 0 :)
+-	glutDisplayFunc ( void (* func(void)) )						callback function to draw when asked to in main loop, MUST USE
+-	glutKeyboardFunc( void (* func( unsigned char key, int x, int y )) )		will set the callback to occur on key press
+-	glutSpecialFunc ( void (* func( int key, int x, int y ) ) )			will set the callback for special keys.... arrow keys, f1,f2....etc
+-	glutReshapeFunc	( void (* func( int width, int height)) ) )			will set teh callback for window resize
+-	glutMouseFunc	( void (* func( int state, int button, int x, int y) ) )
+-	glutMotionFunc	( void (* func( int x, int y ) ) )
+-	glutPassiveMotionFunc	( void (* func( int x, int y )) )
+
+
+-  int 	glutGetModifiers()		this is will return an int that corresponds to the state keys CTR, ALT, SHIFT etc..... (use in keyboard callback)
+
+
+
+	drawing on window ( inside callback function )
+_______________________________________________________________________________
+
+	glClear( buffer_argument )
+
+	glBegin( begin_type )
+	  glVertex3f( float, float, float )
+	  glVertex3f( float, float, float )
+	  glVertex3f( float, float, float )
+	glEnd()
+
+	glutSwapBuffers()
+
+
+	etc ...
+	
+	look up GL library docs for more functions 
+________________________________________________________________________________
