@@ -193,9 +193,12 @@ while continue_reading:
 				temp_rid = str(uid[0]) + str(uid[1]) + str(uid[2]) + str(uid[3])
 				rid_2 = temp_rid
 				role_info_2 = str( check_status("check_status_rfid", rid_2) )
-				role_2_json = json.loads( role_info_2 )
-				print role_2_json[u'role']
-				
+				try:	
+					role_2_json = json.loads( role_info_2 )
+					print role_2_json[u'role']
+				except Exception:
+					print "error"
+					
 				# we have both rid, now all we have to do is sen to the server to decide.
 				json_obj = json.loads( authorization_double( "rfid_double", rid_1, rid_2, device_id ))		
 				print json_obj
