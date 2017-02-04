@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <math.h>
+#include "../sulicat/stack.h"
 
 #define PI 3.145211
 #define INFINITE 999999999
@@ -27,6 +28,7 @@ public:
 	float r;
 	float g;
 	float b;
+	int id;
 	
 	Node * linked_to;
 	int linked_to_len;
@@ -139,12 +141,13 @@ public:
 
 ////////////////////////////////////////////////////////
 void add_node( Node * n, int * n_len, float x, float y );
-Node * shortest_path( Node * n, int n_len );
+Node * shortest_path( Node * n, int n_len, Node start, Node end );
 
 Node * nodes = new Node[ 0 ];
 int nodes_len = 0;
 int button_press_count = 0;
-
+Node start;
+Node end;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +163,7 @@ int main( int argc, char * * argv ){
 	glutInitDisplayMode( GLUT_DOUBLE );
 	glutCreateWindow( "shortest path" );
 
-	srand( 2 );
+	srand( 2  );
 
 	init_glut( );	
 	glutDisplayFunc( display_callback );
@@ -204,7 +207,7 @@ int return_dist_sqr( float x1, float y1, float x2, float y2 ){
 
 }
 
-void add_node( Node * n, int * n_len, float x, float y ){
+void add_node( Node * n, int * n_len, float x, float y, int ID){
 	
 	Node * temp = new Node[ *n_len + 1 ];
 	std::copy( n, n + *n_len, temp );
@@ -213,8 +216,9 @@ void add_node( Node * n, int * n_len, float x, float y ){
 
 	nodes[ *n_len - 1 ].init();
 	nodes[ *n_len - 1 ].set_pos( x, y );
+	nodes[ *n_len - 1 ].id = ID;
 
-	std::cout << "adding node: " << *n_len  << " at x: " << x << " Y: " << y << "\n";
+	std::cout << "adding node: " << *n_len  << " at x: " << x << "  Y: " << y << "ID: " << nodes[ *n_len - 1 ].id << "\n";
 }
 
 
@@ -236,8 +240,7 @@ void add_node_standard( Node * n, int * n_len, Node * input ){
 // creates nodes at random spots using add node method
 void create_random_nodes( Node * * n, int * n_len, int num ){
 	for( int i = 0; i < num; i++ ){
-		add_node( *n, n_len, (int)(window_width * 0.1) + rand() % (int)(window_width*0.8), (int)(window_height * 0.1) + rand() % (int)(window_height*0.8) );
-
+		add_node( *n, n_len, (int)(window_width * 0.1) + rand() % (int)(window_width*0.8), (int)(window_height * 0.1) + rand() % (int)(window_height*0.8), i );
 	}
 
 }
@@ -249,7 +252,7 @@ void create_links( Node * n, int n_len, float range ){
 	for( int i = 0; i < n_len; i++ ){
 		for( int x = i; x < n_len; x++ ){
 			if( x != i && return_dist_sqr( n[i].x, n[i].y, n[x].x, n[x].y ) < range*range ){
-				std::cout << "coonnect \n";
+				//std::cout << "coonnect \n";
 				n[i].add_link( &n[x], true );
 				n[x].add_link( &n[i], false );				
 			}
@@ -261,6 +264,15 @@ void create_links( Node * n, int n_len, float range ){
 
 
 
+
+bool is_node_equal(Node n1, Node n2){
+
+	if( n1.id == n2.id ){
+		return true;
+	}else{
+		return false;
+	}
+}
 
 
 
@@ -359,11 +371,14 @@ void mouse_callback( int button, int state, int x, int y ){
 			if( return_dist_sqr( x, y, nodes[i].x, nodes[i].y ) <= nodes[i].radius*nodes[i].radius ){
 				
 				if( button_press_count == 0 ){
-					nodes[i].is_start = true; 
+					nodes[i].is_start = true;
 					button_press_count += 1;
+					start = nodes[i];
 				}else if( button_press_count == 1 ){
 					nodes[i].is_end = true; 
 					button_press_count += 1;
+					end = nodes[i];
+					shortest_path( nodes, nodes_len, start, end );
 				}else if( button_press_count == 2 ){
 					button_press_count = 0;
 					for( int x = 0; x < nodes_len; x++ ){
@@ -376,9 +391,6 @@ void mouse_callback( int button, int state, int x, int y ){
 			}
 
 	}
-
-			
-
 
 	}
 }
@@ -424,14 +436,27 @@ void draw_circle( float x, float y, float r, float angle_interval ){
 
 
 
-Node * shortest_path( Node * n, int n_len ){
+Node * shortest_path( Node * n, int n_len, Node current_node, Node end_node ){
 
 	Node * path = new Node[ 0 ];
 	int path_len = 0;
 
-	for( int i = 0; i < n_len; i++ ){
-	//	add_node_standard( path, path_len, n[i] );
+	Stack <Node> visited;
+	Stack <Node> un_visited;
+
+	current_node.visited = true;
+	visited.push(current_node);
+
+	if( is_node_equal(visited.give_top(), current_node) ){
+		std::cout << "hello cat\n";
 	}
+
+	for( int i = 0; i < n_len; i++ ){
+		un_visited.push( n[i] );
+		
+	}
+
+
 
 	return path;
 
